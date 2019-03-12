@@ -11,38 +11,52 @@
 </head>
 <body>
 	<%
+	//세션만료시간을 가져오기
 		int time = session.getMaxInactiveInterval();
 		//SimpleDateFormat df = new SimpleDateFormat("hh:mm:ss");
 		//String timeStr =df.format(new Date(time));
 	%>
-	<%=time%>	
 	<SCRIPT src="<%= request.getContextPath()%>/js/jquery-3.3.1.min.js"></SCRIPT>
 	<SCRIPT type="text/javascript">
 		//1초 단위로 시간을 discounts
 		$(function() {
+			$(".btn").hide();
+			$("#info").hide();
+			
 			var timeInfo = $("#timeInfo");
 			var time = <%=time%>;
-		 
 			
 		 	setInterval(function(){
+		 		//time=time-1;
 		 		--time;
-		 		var sec = (time/1000)%60 ;
-			 	var min = sec/60;
-				
-			 	timeInfo.html(sec+":"+min);
-			
+		 		//분
+		 		min=parseInt(time/60);
+		 		//초
+		 		sec=time%60;
+		 		
+		 		timeInfo.html(min+":" + sec);
 				
 			},1000);
-		
-		
-			/* if(time==60){
-				var infoAtt = $("#info").attr();
+			 	
+			//만료시간이 60초가 남았을때
+			setTimeout(() => {
+				$(".btn").show();
+				$("#info").show();
+			
+				$("#yesBtn").click(function() {
+					
+					
+				});
 				
+				$("#noBtn").click(function() {
+					
+					
+				});
+				
+				
+			}, 60000);
 		
-			}		 */
-		
-		
-		
+			
 		
 		});
 	
@@ -63,11 +77,11 @@
 	</pre>	
 		
 	<div id="msgArea"> <!--/hide, /show-->
-		<span id="timeInfo"></span>
-		<span id="info" hidden="true">만료시간이 1분 남았는데 연장 할래?</span>
+		<span id="timeInfo"></span><br>
+		<span id="info">만료시간이 1분 남았는데 연장 할래?</span>
 		<br/>
-		<input type="button" value="연 장" class="btn" id="yesBtn" hidden="true"/>
-		<input type="button" value="취 소" class="btn" id="noBtn" hidden="true"/>
+		<input type="button" value="연 장" class="btn" id="yesBtn"/>
+		<input type="button" value="취 소" class="btn" id="noBtn"/>
 	</div>		
 		
 </body>
