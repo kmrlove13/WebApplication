@@ -8,7 +8,7 @@
 <title>04/resourceIdentify</title>
 </head>
 <body>
-	<h4>자원의 식별</h4>
+	<h3>자원의 식별</h3>
 	<pre>
 	<!--상대경로: 브라우저 주소가 기준-->
 	<!-- <img src="../images/koala.jpg">-> 이방법은상대경로 -->
