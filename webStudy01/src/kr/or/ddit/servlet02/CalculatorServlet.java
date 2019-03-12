@@ -48,36 +48,10 @@ public class CalculatorServlet extends HttpServlet {
 		}
 		
 		//context타입을 어떤 식으로 내보낼것인가
-		public String getResult(double leftOp, double rightOp, String realOp) {
+		public String getResult(double leftOp, double rightOp, OperatorType realOp) {
 			//고정값을 줄수없고 행동의 값을 주자
 			//operator : 사칙연산 if문을 돌리거나, enum, functionalInterface를 이용 
-			double result =0;
-			result = new MakeOperator() {
-					
-			@Override
-				public double makeOp(String op, double leftOp, double rightOp) {
-				
-					return leftOp+op+rightOp;
-				}
-			}
-		};
-			
-			
-			
-			
-//			if(operator.equals("+")) {
-//				result =leftOp+rightOp;
-//				
-//			}else if(operator.equals("-")) {
-//				result =leftOp+rightOp;
-//				
-//			}else if(operator.equals("*")) {
-//				result =leftOp+rightOp;
-//				
-//			}else if(operator.equals("/")) {
-//				result =leftOp+rightOp;
-//				
-//			}
+			double result =realOp.operate(leftOp, rightOp);
 			
 			return realMaker.makeResult(result);
 		}
@@ -148,34 +122,18 @@ public class CalculatorServlet extends HttpServlet {
 			CalculateType type= CalculateType.matches(accept);
 			String mime = type.getMimeText();
 			
-			String result = type.getResult(left, right, "+");
-			
-			
-//			if(accept.contains("plain")) {
-//				mime = "text/plain;charset=UTF-8";
-//				content =res+"";
-//				
-//			}else if(accept.contains("json")) {
-//				mime = "application/json;charset=UTF-8";
-//				content ="{\"result\":"+res+"}";
-//				
-//			}else {
-//				mime = "text/html;charset=UTF-8";
-//				content ="<span>"+res+"</span>";
-//			}
+			content = type.getResult(left, right, opType);
 		
-		//}
 		
 		resp.setContentType(mime);
 		
 		try(
 			PrintWriter writer = resp.getWriter();	
 		){
-			writer.print(result);
-			//writer.print(content);
+			writer.print(content);
 		}
 		
-		
+		}
 	
 	}
 }

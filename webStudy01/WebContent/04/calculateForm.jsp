@@ -32,13 +32,13 @@
 					leftOp: 5,
 					rightOp: 7,
 				} */
-				dataType : "xml",
+				dataType : "json",
 				success : function(resp) {
 					//$('#resultArea').html(resp); 이런 형식은 퍼포먼스가 길어지기에 밑 방법처럼 사용
 					//resultArea.html(resp); html데이터타입
-					//resultArea.html(resp.result); 
+					resultArea.html(resp.result); 
 					//특정조건에 맞는 하위 요소를 찾기 find()
-					var result = $(resp).find("result"); //xml방식
+				//	var result = $(resp).find("result"); //xml방식
 					
 				},
 				error : function(errorResp) {//실패하였을때
@@ -59,6 +59,14 @@
 
 
 </SCRIPT>
+		<%
+			String ptrn = "<option value='%s'>%s</option>\n";
+			StringBuffer options = new StringBuffer();
+			for(OperatorType type: OperatorType.values()){
+				options.append(String.format(ptrn,type.name(),type.getSign()));
+			}
+		
+		%>
 
 </head>
 <body>
@@ -68,13 +76,9 @@
 		서버사이드 방식으로 해결
 		<INPUT type="number" name="leftOp"/>
 		<!--+이게 고정이 아니라 동적으로 할려면 -->
-		<%
-			String ptrn = "<option value='%s'>%s</option>\n";
-			StringBuffer options = new StringBuffer();
-			for(OperatorType.)
-		
-		%>
-		
+		<SELECT name="operator">
+		<%=options %>
+		</SELECT>
 		<INPUT type="number" name="rightOp"/>
 		<INPUT type="submit" value="="/>
 		<SPAN id="resultArea"></SPAN>
