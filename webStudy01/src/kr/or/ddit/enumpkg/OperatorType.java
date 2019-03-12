@@ -1,6 +1,7 @@
 package kr.or.ddit.enumpkg;
 
 public enum OperatorType {
+	
 	PLUS('+',new RealOperator() {
 		@Override
 		public double realOperator(double left, double right) {
