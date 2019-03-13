@@ -84,12 +84,13 @@
 	public StringBuffer gugudan(int minDan, int maxDan ) {
 		StringBuffer buff = new StringBuffer();
 		String pattern = "<td>%d*%d=%d</td>";
-		String clz ="nomal";
 		
 		for(int i=minDan; i<=maxDan; i++){
+			String clz ="normal";
 			
-			if(i==3) {clz="yellow";}
+			if(i==3){clz="yellow";}
 				buff.append(String.format("<tr class='%s'>",clz));
+			
 			for(int j=1; j<10; j++){
 				buff.append(String.format(pattern, i, j, (i*j)));
 			}

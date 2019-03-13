@@ -23,7 +23,7 @@
 			
 			//전송버튼 눌러도 사진이 나오고, 선택해도 사진이 나오고
 			$("#imgForm").on("submit", function(event){
-				event.preventDefault();
+				event.preventDefault();//액션이벤트를 뺏어오는것
 				//event.preventDefault();이거 없으면 이코드는 불안해 , 리턴전에 에러가 나면 리턴이 실행되기전에 화면이 넘어감
 				var selImg = $("[name='selImg']").val();
 				var imgTag = pattern.replace("%I",selImg);

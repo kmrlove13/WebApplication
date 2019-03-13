@@ -54,7 +54,7 @@
 		<tr>
 			<th>혈액형</th>		
 			<td>
-				<select name="btype" multiple size="6">
+				<select name="btype">
 					<option value="a">a</option>
 					<option value="b">b</option>
 					<option value="o">o</option>
