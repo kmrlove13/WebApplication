@@ -10,6 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -22,6 +23,11 @@ public class itzyControllerServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		//여기에 세션이 없으니까 
+		HttpSession session = req.getSession();
+		//Map<String, itzyVO> itzyMap = (Map)session.getAttribute("itzyMap");
+		Map<String, itzyVO> itzyMap = (Map)getServletContext();
+		
 		/*
 		 * 굳이 jsp로 할 필요 없지 이쪽은 서블릿으로 파라미터를 가져오기, 검증, 각 멤버의 모든 정보가 포함된 페이지를 출력하기 여기서는 요청을
 		 * 받고 확인하기 까지만, 멤버의 정보를 확인하는 페이지는 별도로 왜냐하면 여기다가 한꺼번에 하면 가독성이 떨어짐
@@ -32,12 +38,12 @@ public class itzyControllerServlet extends HttpServlet {
 		// 검증
 		// form에 있는 맵을 가져오게
 		// 어떻게 하면 다른 jsp에 있	는 맵을 가져올수 잇을까
-		Map<String, itzyVO> itzyMap = new LinkedHashMap<>();// 지네릭스 뒤에는 생략 가능함 1.7부터, jdk는 1.8이지만, 톰캣이 컴파일하는데 톰캣의 자바
-		itzyMap.put("yezi", new itzyVO("예지", "/itzy/yezi.jsp"));
-		itzyMap.put("ria", new itzyVO("리아", "/itzy/ria.jsp"));
-		itzyMap.put("ryuzin", new itzyVO("류진", "/itzy/ryuzin.jsp"));
-		itzyMap.put("cheryung", new itzyVO("채령", "/itzy/cheryung.jsp"));
-		itzyMap.put("yuna", new itzyVO("유나", "/itzy/yuna.jsp"));
+//		Map<String, itzyVO> itzyMap = new LinkedHashMap<>();// 지네릭스 뒤에는 생략 가능함 1.7부터, jdk는 1.8이지만, 톰캣이 컴파일하는데 톰캣의 자바
+//		itzyMap.put("yezi", new itzyVO("예지", "/itzy/yezi.jsp"));
+//		itzyMap.put("ria", new itzyVO("리아", "/itzy/ria.jsp"));
+//		itzyMap.put("ryuzin", new itzyVO("류진", "/itzy/ryuzin.jsp"));
+//		itzyMap.put("cheryung", new itzyVO("채령", "/itzy/cheryung.jsp"));
+//		itzyMap.put("yuna", new itzyVO("유나", "/itzy/yuna.jsp"));
 
 		if (StringUtils.isBlank(param)) {// 필수파라미터 누락이 되었다면 상태코드를 sc_bad_request
 			statusCode = HttpServletResponse.SC_BAD_REQUEST;
