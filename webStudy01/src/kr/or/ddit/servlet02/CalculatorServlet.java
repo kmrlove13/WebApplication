@@ -22,12 +22,6 @@ public class CalculatorServlet extends HttpServlet {
 		public String makeResult(double result);
 	}
 	
-	@FunctionalInterface
-	public static interface MakeOperator{
-		public double makeOp(String op, double leftOp, double rightOp);
-		
-	}
-	
 	public static enum CalculateType{
 		
 		PLAIN("text/plain;charset=UTF-8",(result)->{return result+"";}), 
@@ -37,7 +31,6 @@ public class CalculatorServlet extends HttpServlet {
 		
 		private String mimeText;
 		private MakeResult realMaker;
-		private MakeOperator realOp;
 		
 		
 		//text의 값을 구성할수있는 요소는 생성자 

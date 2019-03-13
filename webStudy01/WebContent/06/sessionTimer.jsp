@@ -39,18 +39,24 @@
 			},1000);
 			 	
 			//만료시간이 60초가 남았을때
-			setTimeout(() => {
+			setTimeout((event) => {
 				$(".btn").show();
 				$("#info").show();
 			
+				//연장버튼을 선택했을대
 				$("#yesBtn").click(function() {
+					
+					time =<%=time%>;
 					
 					
 				});
 				
+				//연장취소 버튼을 선택했을때
 				$("#noBtn").click(function() {
-					
-					
+					//0초가 되면 새로고침
+					<%= 
+					response.setIntHeader("Refresh", 1)
+					%>
 				});
 				
 				
