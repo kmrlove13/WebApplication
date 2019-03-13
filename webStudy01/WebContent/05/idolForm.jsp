@@ -34,6 +34,7 @@
 </SCRIPT>
 <%
 	Map<String, itzyVO> itzyMap=new LinkedHashMap<>();//지네릭스 뒤에는 생략 가능함 1.7부터,  jdk는 1.8이지만, 톰캣이 컴파일하는데 톰캣의 자바
+	session.setAttribute("itzyMap", itzyMap);
 	itzyMap.put("yezi",new itzyVO("예지","/itzy/yezi.jsp"));
 	itzyMap.put("ria",new itzyVO("리아","/itzy/ria.jsp"));
 	itzyMap.put("ryuzin",new itzyVO("류진","/itzy/ryuzin.jsp"));

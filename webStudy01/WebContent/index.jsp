@@ -13,6 +13,16 @@
 			
 	//} 
 	//cookies 와 session 목요일 수업주제 
+	String authId = (String)session.getAttribute("authId");
+	if(StringUtils.isNotBlank(authId)){
+		%>
+		<h4><a href="<%=request.getContextPath()%>/login/logOut.jsp"> 로그아웃</a></h4>
+		<% 
+	}else{
+		%>
+		<h4><a href="<%=request.getContextPath()%>/login/loginForm.jsp"> 로그인하러가기</a></h4>
+		<% 
+	}
 	
 	
 	

@@ -1,35 +1,7 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<%@page import="java.util.Date"%>
-<%@page import="java.text.SimpleDateFormat"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
-<%
-	//세션만료시간을 가져오기
-	int time = session.getMaxInactiveInterval();
-	//SimpleDateFormat df = new SimpleDateFormat("hh:mm:ss");
-	//String timeStr =df.format(new Date(time));
-%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>06/sessionTimer.jsp</title>
-<!-- sessionTimer플러그인이 돌아가긴 위해서 jquery가 필요함, 스크립트 순서 잘 해야함! -->
-<SCRIPT src="<%=request.getContextPath()%>/js/jquery-3.3.1.min.js"></SCRIPT>
-<SCRIPT src="<%=request.getContextPath()%>/js/jquery_sessiontimer.js"></SCRIPT>
-<!--이 형태는 제이쿼리가 없으면 사용못함, 즉 플러그인 형태-->
-<SCRIPT type="text/javascript">
-//만약에 html이거나 다른곳은 표현식을 사용못하니까
-	$.getContextPath=function(){
-		return "<%=request.getContextPath()%>
-	}
-	
-	/*제이쿼리 안에 들어있는 함수*/
-	$.fn.sampleFunc = function(text) {
-		//얘는엘리멘트가 호출하니까 그 엘리멘트를 뜻하는 this를 사용	
-		this.html(text);
-	}
-
+/**
+ * 타이머
+ * $("#sample").sessionTimer(120, "moveURL");
+ */
 	$.fn.sessionTimer = function(timeOut) {
 		//timeOut이 넘어왔나 안넘어왔나 판단하는법
 		if (!timeOut) {
@@ -49,8 +21,6 @@
 				}
 
 			}
-			return text;
-		}	
 
 			/*js에선 function도 객체라서 이런식으로 사용할 수 있음
 			이 함수 안에서만 사용하는 함수를 하나 더 만듬*/
@@ -128,38 +98,3 @@
 			return this;
 
 		}
-	
-	//함수 사용방법 :사용하기 위해선 타이머라는 엘리멘트에서 호출, 이런 구조를 함수의 체인형 구조
-	$(function() {
-		$("#timer").sessionTimer(6);
-
-	});
-</SCRIPT>
-
-</head>
-<body>
-
-	<div id="timer"></div>
-	<pre>
-	1. 세션의 만료 시간을 출력 02:00 서버사이드 , 나머지는 클라이언트에서 사용
-	2. 초 단위로 시간을 discount
-	3. 만료시간이 1분이 남은 경우 "연장하시겠습니까 "메세지, 연장 여부 결정 메시지 출력 
-	4. 연장을 하는 경우 -타이머 리셋, 단순히 클라이언트 사이드에서 변경이 아니라, 서버사이드에서 변경되야됨 요청을 다시 날려야함 
-		서버의 세션을 연장하기 위해 새로운 요청 발생 비동기 요청으로 발생
- 	5. 연장을 안하는 경우 -타이머 그대로 disCount
-		0초가 남으면 자동으로 로그아웃 상태로 바꿔야됨 새로고침만 하면 로그아웃 상태로 되어있을꺼얌 
-		0초가 되는 순간, 현재 페이지가 refresh가 되도록 
-	매 1초마다 새로고침 -> interval 함수 
-	1분 남아서 새로고침 -> callback 함수
-	</pre>
-	<!-- 이건 하드코딩방법 , 이 서버시간코딩 자체를 플러그인으로 생성할 것이기 때문에 이거 지워주지
-	<div id="msgArea">
-		/hide, /show
-		<span id="timeInfo"></span><br>
-		<span id="info">만료시간이 1분 남았는데 연장 할래?</span> <br /> <input
-			type="button" value="연 장" class="btn" id="yesBtn" /> <input
-			type="button" value="취 소" class="btn" id="noBtn" />
-	</div> -->
-
-</body>
-</html>

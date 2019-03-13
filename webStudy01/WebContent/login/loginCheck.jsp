@@ -16,6 +16,7 @@
 	
 	if(StringUtils.isBlank(id) || StringUtils.isBlank(pass)){
 	//검증에 실패한 경우: 원본요청의 파라미터가 생존한채 전달 	
+		redirect = true;
 		goPage="/login/loginForm.jsp";
 	}else{ 
 	
@@ -28,6 +29,8 @@
 			
 		}else{
 			//아이디 비번이 맞지않다면
+			redirect=true;
+			session.setAttribute("failedId",id);
 			goPage ="/login/loginForm.jsp";
 			
 		}

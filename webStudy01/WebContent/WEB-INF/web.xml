@@ -5,6 +5,16 @@
     <welcome-file>index.jsp</welcome-file>
   </welcome-file-list>
   
+  <context-param> 
+  	<param-name>appParam1</param-name>
+  	<param-value>파라미터값1</param-value>
+  </context-param>
+  
+  <context-param>
+  	<param-name>driverClassName</param-name>
+  	<param-value>oracle.jdbc.driver.OracleDriver</param-value>
+  </context-param>
+	
 	<servlet>
 		<servlet-name>ImageFormServlet</servlet-name>
 		<servlet-class>kr.or.ddit.servlet01.ImageFormServlet</servlet-class>
@@ -21,7 +31,6 @@
   <!--2분이 만료단위, 여기는 분단위로 설정-->
   	<session-config>
   		<session-timeout>2</session-timeout>
-  	
   	</session-config>
   
 </web-app>
