@@ -13,6 +13,7 @@
 	String pass = request.getParameter("mem_pass");
 	
 	//2. 검증, 널값, 필수파라미터 전송했는지
+	//내가 인증에 성공했다, 내가 인증에 실패했다 -> 유저랑 관련된 데이터 그래서 최소한의 영역은 session
 	
 	if(StringUtils.isBlank(id) || StringUtils.isBlank(pass)){
 	//검증에 실패한 경우: 원본요청의 파라미터가 생존한채 전달 	
@@ -25,7 +26,7 @@
 			redirect = true;
 			//goPage ="/index.jsp?mem_id="+id; 데이터가 노출됨
 			session.setAttribute("authId",id);// 어트리뷰는 이름과 값으로 구성됨, 이 세션은 맵으로 이루어져 있는데 이 맵을 스코프라고 부럼
-			goPage ="/index.jsp";
+			goPage ="/";
 			
 		}else{
 			//아이디 비번이 맞지않다면

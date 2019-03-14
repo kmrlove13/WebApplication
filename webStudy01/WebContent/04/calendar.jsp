@@ -140,6 +140,7 @@
 %>	
 	
 	<form name ="calForm">	
+		<INPUT type="hidden" name="includePage" value="calendar"/>
 	<h4><!--다음번 요청의 방향을 결정하는 href를 사용-->
 		<!--눈에는 안보이지만 사실은 주소가 전달됨, 그래서 ?이거 필요함-->
 		<!--이 방법은 각개로 요청을 받아줌 하나로 합칠땐 이건 사용하면 안됨 

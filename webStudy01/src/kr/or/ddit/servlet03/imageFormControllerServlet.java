@@ -55,7 +55,7 @@ public class imageFormControllerServlet extends HttpServlet {
 		req.setAttribute("imageFiles", imageFiles);
 		String view="/WEB-INF/views/imageFormView.jsp";
 		RequestDispatcher rd= req.getRequestDispatcher(view);
-		rd.forward(req, resp);
+		rd.include(req, resp);
 	}
 	
 	

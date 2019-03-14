@@ -9,12 +9,6 @@
 <title>02/gugudan.jsp</title>
 <script src="/webStudy01/js/jquery-3.3.1.min.js"></script>
 
-<SCRIPT type="text/javascript">
-	$(function() {
-
-	});
-</SCRIPT>
-
 <STYLE type="text/css">
 .yellow {
 	background-color: yellow;
@@ -32,6 +26,13 @@
 	String minStr = request.getParameter("minDan");
 	String maxStr = request.getParameter("maxDan");
 	
+	if((StringUtils.isNotBlank(minStr) && !StringUtils.isNumeric(minStr))
+			||(StringUtils.isNotBlank(maxStr) && !StringUtils.isNumeric(maxStr))
+			){
+		response.sendError(400);
+		return;		
+	}
+	
 	if(StringUtils.isNumeric(minStr)&&StringUtils.isNumeric(maxStr)){
 		minDan = Integer.parseInt(minStr);
 		maxDan = Integer.parseInt(maxStr);
@@ -39,7 +40,10 @@
 
 %>
 
+<!--  -->
+	
 	<form>
+		<INPUT type="hidden" name="includePage" value="gugudan"/>
 		<ul>
 			<li>최소단 : <input type="number" min="2" max="9" name="minDan" value="<%=minDan%>"></li>
 			<li>최대단 : <input type="number" min="2" max="9" name="maxDan" value="<%=maxDan%>"></li>

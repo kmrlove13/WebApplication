@@ -26,14 +26,14 @@ public class itzyControllerServlet extends HttpServlet {
 		//여기에 세션이 없으니까 
 		HttpSession session = req.getSession();
 		//Map<String, itzyVO> itzyMap = (Map)session.getAttribute("itzyMap");
-		Map<String, itzyVO> itzyMap = (Map)getServletContext();
+		Map<String, itzyVO> itzyMap = (Map<String, itzyVO>)getServletContext().getAttribute("itzyMap");
 		
 		/*
 		 * 굳이 jsp로 할 필요 없지 이쪽은 서블릿으로 파라미터를 가져오기, 검증, 각 멤버의 모든 정보가 포함된 페이지를 출력하기 여기서는 요청을
 		 * 받고 확인하기 까지만, 멤버의 정보를 확인하는 페이지는 별도로 왜냐하면 여기다가 한꺼번에 하면 가독성이 떨어짐
 		 */
 		// 파라미터 가져오기
-		String param = req.getParameter("izzy");
+		String memCode = req.getParameter("itzy");
 		int statusCode = 0;
 		// 검증
 		// form에 있는 맵을 가져오게
@@ -45,22 +45,22 @@ public class itzyControllerServlet extends HttpServlet {
 //		itzyMap.put("cheryung", new itzyVO("채령", "/itzy/cheryung.jsp"));
 //		itzyMap.put("yuna", new itzyVO("유나", "/itzy/yuna.jsp"));
 
-		if (StringUtils.isBlank(param)) {// 필수파라미터 누락이 되었다면 상태코드를 sc_bad_request
+		if (StringUtils.isBlank(memCode)) {// 필수파라미터 누락이 되었다면 상태코드를 sc_bad_request
 			statusCode = HttpServletResponse.SC_BAD_REQUEST;
 		} else {// 필수파라미터 목록에 있는것 그대로 가져왔는지
-			if (!itzyMap.containsKey(param)) {
+			if (!itzyMap.containsKey(memCode)) {
 				statusCode = HttpServletResponse.SC_NOT_FOUND;
 			}
 		}	
 
 		if (statusCode == 0) {// 누락도 안되고 목록에도 있다면
 			// client는 web-inf에 접근할수 없음, 이거 사용할려면 dispatch이용해야해
-			String goPage = "/WEB-INF/" + itzyMap.get(param).getPage();
+			String goPage = "/WEB-INF/" + itzyMap.get(memCode).getPage();
 			// String goPage= itzyMap.get(param).getPage();
 
 			/* 매개변수를 계속 사용할때 */
 			RequestDispatcher rd = req.getRequestDispatcher(goPage);
-			rd.forward(req, resp);
+			rd.include(req, resp);
 
 			// 이제 매개변수 계속 사용할 필요가 없으니
 			// response.sendRedirect(request.getContextPath()+goPage);

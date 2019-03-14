@@ -21,20 +21,17 @@
 	//콘솔 확인 
 	//소스라는 태그에서 ctrl+b 소스파일열고 펑션부분 확인, 펑션부분 디버깅 
 	
-	if(!selValue){
-		//요청 발생시켰다면 
-		return false;
-	}else{
-		return true;// 호출자쪽에서 리턴값을 가져감 submitHandler가
-	}
-	
-	
-	
+		if(!selValue){
+			//요청 발생시켰다면 
+			return false;
+		}else{
+			return true;// 호출자쪽에서 리턴값을 가져감 submitHandler가
+		}
 	}
 </SCRIPT>
 <%
 	Map<String, itzyVO> itzyMap=new LinkedHashMap<>();//지네릭스 뒤에는 생략 가능함 1.7부터,  jdk는 1.8이지만, 톰캣이 컴파일하는데 톰캣의 자바
-	session.setAttribute("itzyMap", itzyMap);
+	application.setAttribute("itzyMap", itzyMap);
 	itzyMap.put("yezi",new itzyVO("예지","/itzy/yezi.jsp"));
 	itzyMap.put("ria",new itzyVO("리아","/itzy/ria.jsp"));
 	itzyMap.put("ryuzin",new itzyVO("류진","/itzy/ryuzin.jsp"));
@@ -65,12 +62,14 @@
 리턴값을 받아서 리턴값에 따라 submit()을 핸들링
 이벤트핸들러를 갖다 붙이는 녀석, 사식 익명함수가 만들어져 있고 그안에 코드를 작성 
 리턴 펄스가 되었다는건 리턴을 취소-->
-	<form onsubmit="return submitHandler(event);" name='idolForm'
-		action='<%=request.getContextPath()%>/05/getMemberPage.do'><!--서블렛 주소를 -->
+<!--submit이 되더라도 현재브라우저(index)기준 화면분할-->
+	<form onsubmit="return submitHandler(event);" name='idolForm'>	
+		<%-- action='<%=request.getContextPath()%>/05/getMemberPage.do'> --%><!--서블렛 주소를 -->
 		<!--도큐먼트가 가지고 있는 id가 submitBtn이라는 요소를 -->
-		<SELECT name="izzy" onchange="document.getElementById('submitBtn').click();">
+		<INPUT type="hidden" name="includePage" value="GETMEMBERPAGE"/>
+		<SELECT name="itzy" onchange="document.getElementById('submitBtn').click();">
+			<OPTION >멤버</OPTION>
 			<%
-			
 				String ptrn = "<option value='%s'>%s</option>";			
 				for(Entry<String,itzyVO> entry : itzyMap.entrySet()){
 					String code = entry.getKey();
@@ -79,17 +78,11 @@
 					out.println(String.format(ptrn, code, vo.getName()));
 				}
 			%>
-			<!-- <OPTION value=''>멤버</OPTION>
-			<OPTION value='yezi'>예지</OPTION>
-			<OPTION value='ria'>리아</OPTION>
-			<OPTION value='ryuzin'>류진</OPTION>
-			<OPTION value='cheryung'>채령</OPTION>
-			<OPTION value='yuna'>유나</OPTION> -->
 		</SELECT>
 	<input id="submitBtn" type="submit" value="확인용"/>
 	</form>
-	idolForm<h4><%=application.hashCode()%></h4>
-	servletContext<h4><%=getServletContext().hashCode()%></h4>
+	<h4>idolForm : <%=application.hashCode()%></h4>
+	<h4>servletContext : <%=getServletContext().hashCode()%></h4>
 	
 	
 </body>
