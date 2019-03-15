@@ -34,7 +34,7 @@
 			throw new NullPointerException("강제발생예외");
 		}
 		
-int number=5;
+		int number=5;
 		//int result=5/0;
 		//0하고 0d는 달라, 
 		double res = number/0d;
