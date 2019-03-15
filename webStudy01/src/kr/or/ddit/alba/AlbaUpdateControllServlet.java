@@ -1,15 +1,11 @@
 package kr.or.ddit.alba;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
-import javax.management.RuntimeErrorException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -22,37 +18,53 @@ import org.apache.commons.lang.StringUtils;
 
 import kr.or.ddit.alba.dao.AlbaDAOFromFileSystem;
 import kr.or.ddit.vo.AlbaVO;
-import sun.reflect.generics.tree.FieldTypeSignature;
-@WebServlet(urlPatterns="/albaregist.do",loadOnStartup=1)
-public class AlbaRegistControllerServlet extends HttpServlet {
-//하나의 주소로 두가지 메서드를 처리할수 잇음 	
-	//public static final String MAPATTR = "albaMap";
+
+@WebServlet("/albaUpdate.do")
+public class AlbaUpdateControllServlet extends HttpServlet {
 	AlbaDAOFromFileSystem albaDao = AlbaDAOFromFileSystem.getInstance();
-	public static final String LICMAPATTR = "licMap";
-	
-	//폼으로 연결만 하기때문에 get으로 
-	//loadOnStartup 요청이 들어오지 않더라도 얘가 먼저 호출
-	@Override
-	public void init() throws ServletException {
-		super.init();
-	//db를 대신할 Map을 미리 호출하기 위해서 , 순서대로 들어갈수 있게 linked
-	  // Map<String, AlbaVO> albaMap = new LinkedHashMap<String, AlbaVO>();
-	   Map<String, String> licMap = new LinkedHashMap<>();
-	//application scope로	
-		getServletContext().setAttribute(LICMAPATTR, licMap);
-		//getServletContext().setAttribute(MAPATTR, albaMap);
-		
-	}
-	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String view = "/WEB-INF/views/alba/albaForm.jsp";
-		RequestDispatcher rd = req.getRequestDispatcher(view);
-		rd.forward(req, resp);
+		//잘못된 파라미터 400, 
+		//application map을 가져오고 
+		//map리스트에서 아이디를 가지고 회원을 찾고 , 회원이 없으면 404
+		//파라미터 없고, 파라미터있으며 회원이 없을때, 파라미터있고 회원도 있고 
+		//해당 회원 있으면 /webStudy01/WebContent/WEB-INF/views/alba/albaView.jsp
+		
+		//list id파람 가지고 오고 
+		String param = req.getParameter("who");
+		//총 회원들 정보를 가져오고 
+		//Map<String, AlbaVO> albaMap=(Map<String, AlbaVO>)getServletContext().getAttribute(AlbaRegistControllerServlet.MAPATTR);
+		
+		//상태코드 받을 변수 
+		int statusCode = 0;
+		if(StringUtils.isBlank(param)) {
+			statusCode= HttpServletResponse.SC_BAD_REQUEST;
+		}
+		
+		//총회원들하고 id를 비교
+		AlbaVO alba = albaDao.selectAlba(param);
+		
+		//해당 회원이 존재	
+		if(alba!=null) {
+			//수정할려면 전에 작성했던것도 가져가야지 
+			req.setAttribute("alba", alba);
+			RequestDispatcher rd = req.getRequestDispatcher("/WEB-INF/views/alba/albaForm.jsp");
+			rd.forward(req, resp);
+		
+		}else {//해당회원이 존재하지 않음
+			statusCode = HttpServletResponse.SC_NOT_FOUND;
+		}
+		
+		if(statusCode!=0) {//상태코드 있는경우 에러 있는경우
+			resp.sendError(statusCode);
+			return;
+		}
+		
 	}
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
 		//검증 성공
 		//파라미터 name을 모를땐 Map으로, key가 name
 		req.setCharacterEncoding("UTF-8");
@@ -88,16 +100,13 @@ public class AlbaRegistControllerServlet extends HttpServlet {
 		//검증 성공
 		if(valid) {
 			//db를 대신해 map을 작성해야함
-			//ex)alba_001 알바 아이디 자동 생성, 숫자3자리 패딩글자는 0
-//			Map<String, AlbaVO> albaMap = (Map<String, AlbaVO>)getServletContext().getAttribute(MAPATTR);
-//			
-//			String id = String.format("alba_%03d",albaMap.size()+1);
-//			albaVO.setId(id);
-//			albaMap.put(albaVO.getId(), albaVO);
-			albaDao.insertAlba(albaVO);
-//			//등록이 되었다면 albaList.do(controller, view)로 이동 redirect방법 
+			//수정
+			//Map<String, AlbaVO> albaMap = (Map<String, AlbaVO>)getServletContext().getAttribute(AlbaRegistControllerServlet.MAPATTR);
+			albaDao.updateAlba(albaVO);
+			
+			//등록이 되었다면 albaList.do(controller, view)로 이동 redirect방법 
 			redirect= true;
-			goPage="/albaList.do";
+			goPage="/albaView.do?who="+albaVO.getId();
 		}else {//검증 실패
 			//응답데이터는 응답상태코드를 활용할 수 있음
 			//404, 500..응답이 실패했다는 정보를 제공
@@ -117,8 +126,9 @@ public class AlbaRegistControllerServlet extends HttpServlet {
 			RequestDispatcher rd = req.getRequestDispatcher(goPage);
 			rd.forward(req, resp);
 		}
+	
 	}
-
+	
 	// 검증
 	private boolean validate(AlbaVO albaVO, Map<String, String> errors){
 		boolean valid = true;
@@ -140,55 +150,5 @@ public class AlbaRegistControllerServlet extends HttpServlet {
 		return valid;
 	}	
 
-	// 500에러-서버, 400에러-클라이언트
-	// 리플렉션 : 어떤 클래스가 있는지 모르고, 그 클래스의 프로퍼티를 모를때 프로퍼티를 추적하는 과정
-	// 검증로직
-
-	private void ref() {
-		// 일부러 메서드에 넣어서 정리한거임, 실제로 사용한건 아님
-		// 리플렉션 방법
-		// for(Entry<String, String[]> entry : parameterMap.entrySet()) {
-		// String paramName= entry.getKey();
-		// String[] values = entry.getValue();
-		// Class type= albaVO.getClass();
-		//
-		// try {//리플렉션은 추측하면서 하는거라 예외처리 해야될게 많아
-		// //Field field = type.getField(paramName); 이건 private에 접근 못해
-		// Field field = type.getDeclaredField(paramName);
-		// Class fieldType = field.getType();//전역변수의 타입을 받아올수 있음
-		//
-		// String setterName = "set"+paramName.substring(0,1).toUpperCase();
-		// Method method = type.getMethod("setName", fieldType);
-		//
-		// if(String.class.equals(fieldType)) {
-		// if(values !=null && values.length>0) {
-		// method.invoke(albaVO,values[0]);
-		// //==albaVo.setName(name) 이런형식
-		// }
-		//
-		// }else if(String[].class.equals(fieldType)) {
-		// method.invoke(albaVO,values);
-		//
-		// }else if(Integer.class.equals(fieldType)) {
-		//
-		// if(values !=null && values.length>0) {
-		// // parseInt하면 변수 타입이 int니까
-		// method.invoke(albaVO,new Integer(values[0]));
-		// }
-		// }
-		// } catch (NoSuchFieldException | SecurityException | NoSuchMethodException e)
-		// {
-		// e.printStackTrace();
-		// } catch (NumberFormatException e) {
-		// e.printStackTrace();
-		// } catch (IllegalAccessException e) {
-		// e.printStackTrace();
-		// } catch (IllegalArgumentException e) {
-		// e.printStackTrace();
-		// } catch (InvocationTargetException e) {
-		// e.printStackTrace();
-		// }
-		// }
-	}
-
+	
 }
