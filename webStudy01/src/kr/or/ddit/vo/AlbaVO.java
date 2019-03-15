@@ -3,6 +3,7 @@ package kr.or.ddit.vo;
 import java.io.Serializable;
 import java.util.Map;
 
+
 /**
  * JavaBean 규약
  * 	- 자바빈 규약에 따라 정의된 재사용 가능한 자바 객체
@@ -23,6 +24,8 @@ import java.util.Map;
  * 
  *
  */
+
+
 public class AlbaVO implements Serializable {
 	//int대신 integer사용하는 이유, 객체를 이용하기 위해, null값을 사용하기 위해
 	//원칙적으로 프레임웍의 기본단위는 오브젝트 
@@ -37,7 +40,7 @@ public class AlbaVO implements Serializable {
 	private String gen;
 	private String btype;
 	private String grade;
-	private Map<String, String[]> lic;//자격증
+	private String[] lic;//자격증
 	private String career;
 	private String spec;
 	private String desc;
@@ -97,10 +100,11 @@ public class AlbaVO implements Serializable {
 	public void setGrade(String grade) {
 		this.grade = grade;
 	}
-	public Map<String, String[]> getLic() {
+	
+	public String[] getLic() {
 		return lic;
 	}
-	public void setLic(Map<String, String[]> lic) {
+	public void setLic(String[] lic) {
 		this.lic = lic;
 	}
 	public String getCareer() {
