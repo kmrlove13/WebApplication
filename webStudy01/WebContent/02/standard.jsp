@@ -17,12 +17,9 @@
 		소스 구성 요소
 		1. 정적 텍스트 : 텍스트, html, javascript, jquery 작성한 그대로 client로 표시
 		2. 스크립트 구성 요소 : server side 실행 코드 
-			1) 지시자(directive) : &lt;%@ 지시자명 속성들(이름=값
-			
-			) %&gt;
+			1) 지시자(directive) : &lt;%@ 지시자명 속성들(이름=값) %&gt;
 				- jsp페이지에 부가 설정이나 환경 설정에 사용됨, 실행코드 아닙니다.
 				page (필수지시자)
-					
 				taglib(나중에)
 				include(나중에)
 			2) 스크립틀릿 : &lt;%자바코드%&gt;-지역코드화 (_JspService)

@@ -12,10 +12,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 
+import kr.or.ddit.alba.dao.AlbaDAOFromFileSystem;
 import kr.or.ddit.vo.AlbaVO;
 @WebServlet("/albaDelete.do")
 public class AlbaDeleteControllerServlet extends HttpServlet {
-
+	AlbaDAOFromFileSystem albaDao = AlbaDAOFromFileSystem.getInstance();
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -28,8 +29,8 @@ public class AlbaDeleteControllerServlet extends HttpServlet {
 		//list id파람 가지고 오고 
 		String param = req.getParameter("who");
 		//총 회원들 정보를 가져오고 
-		Map<String, AlbaVO> albaMap=(Map<String, AlbaVO>)getServletContext().getAttribute(AlbaRegistControllerServlet.MAPATTR);
-		
+		//Map<String, AlbaVO> albaMap=(Map<String, AlbaVO>)getServletContext().getAttribute(AlbaRegistControllerServlet.MAPATTR);
+		Map<String, AlbaVO> albaMap = albaDao.selectAlbaList();
 		//상태코드 받을 변수 
 		int statusCode = 0;
 		if(StringUtils.isBlank(param)) {
@@ -38,7 +39,6 @@ public class AlbaDeleteControllerServlet extends HttpServlet {
 		
 		//총회원들하고 id를 비교
 		AlbaVO alba = albaMap.get(param);
-		
 		//해당 회원이 존재	
 		if(alba!=null) {
 			//멤버 삭제

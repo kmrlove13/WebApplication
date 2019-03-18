@@ -59,8 +59,8 @@ public class GugudanServlet extends HttpServlet {
 		String minDanStr = request.getParameter("minDan");//html에서 int로 입력했어도 문자열로 넘어옴
 		String maxDanStr = request.getParameter("maxDan");//html에서 int로 입력했어도 문자열로 넘어옴
 		
-		int minDan =2; 
-		int maxDan =9;
+		int minDan = 0; 
+		int maxDan = 0;
 		//정규식으로 2-9까지만 밖을수 있도록, 널값 체크 조건
 		if(minDanStr!=null && minDanStr.matches("[2-9]") && maxDanStr!=null && maxDanStr.matches("[2-9]")) {
 			minDan = Integer.parseInt(minDanStr);

@@ -2,6 +2,8 @@ package kr.or.ddit.servlet02;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,19 +15,37 @@ import javax.xml.ws.Response;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import kr.or.ddit.enumpkg.OperatorType;
 @WebServlet("/calculator.do")
 public class CalculatorServlet extends HttpServlet {
 	
 	@FunctionalInterface
 	public static interface MakeResult{
-		public String makeResult(double result);
+		public String makeResult(double result) ;
 	}
 	
 	public static enum CalculateType{
 		
 		PLAIN("text/plain;charset=UTF-8",(result)->{return result+"";}), 
-		JSON("application/json;charset=UTF-8",(result)->{return "{\"result\":"+result+"}";}), 
+		JSON("application/json;charset=UTF-8",(result)->{
+			Map<String, Object> resulMap = new HashMap<String, Object>();
+			resulMap.put("result",result);
+			//마샬링 
+			ObjectMapper mapper = new ObjectMapper();
+			//직렬화도 같이 하기 위해 writevalue..이 메서드 사용
+			try {
+				return mapper.writeValueAsString(resulMap);
+			} catch (JsonProcessingException e) { // return 대신에 예외 생성
+				throw new RuntimeException(e);// 원본 예외를 사라지지 않게 e를 매개로 
+			}
+			
+			//마샬링하는 과정에서 직렬화가 안된  객체이면 JsonProcessingException 얘가 생김
+			
+			}), 
+		
 		HTML("text/html;charset=UTF-8",(result)->{return "<span>"+result+"</span>";}),
 		XML("application/xml;charset=UTF-8", (result)->{return "<result>"+result+"</result>";});
 		

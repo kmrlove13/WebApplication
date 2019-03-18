@@ -46,7 +46,7 @@ public class IndexControllerServlet extends HttpServlet {
 		}
 		//값을 넘기기 
 		req.setAttribute("includePage",includePage);
-		String view = "/WEB-INF/views/index_bak.jsp";
+		String view = "/WEB-INF/views/index.jsp";
 		RequestDispatcher rd= req.getRequestDispatcher(view);
 		rd.forward(req, resp);
 		

@@ -2,15 +2,19 @@ package kr.or.ddit.servlet03;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.ResourceBundle;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import kr.or.ddit.utils.CookieUtil;
 
 /**
  * Model2 구조상에서 
@@ -49,9 +53,24 @@ public class imageFormControllerServlet extends HttpServlet {
 		File[] imageFiles = sampleFolder.listFiles((dir,name)->{
 			//어플리케이션 기본 객체, 스트링타입의 마임이 반환
 			String mime = getServletContext().getMimeType(name);
-			return mime!=null&mime.startsWith("image/");
+			return mime!=null&&mime.startsWith("image/");
 		});
 	
+//		Cookie[] cookies = req.getCookies();
+//		if (cookies != null) {
+//			for (Cookie tmp : cookies) {
+//				if (tmp.getName().equals("img")) {
+//					String imgName =URLDecoder.decode(tmp.getValue(),"UTF-8");
+//					req.setAttribute("imgName", imgName);
+//				}
+//			}
+//		}
+		
+		//cookie value를 설정하기
+		CookieUtil cookieUtil = new CookieUtil(req);
+		String imgName = cookieUtil.getCookieValue("imgCookie");
+		req.setAttribute("imgName", imgName);
+		
 		req.setAttribute("imageFiles", imageFiles);
 		String view="/WEB-INF/views/imageFormView.jsp";
 		RequestDispatcher rd= req.getRequestDispatcher(view);
