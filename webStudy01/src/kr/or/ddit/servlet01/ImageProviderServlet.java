@@ -6,17 +6,22 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.net.URLEncoder;
 import java.util.ResourceBundle;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jdt.internal.compiler.ast.ThrowStatement;
+
+import kr.or.ddit.utils.CookieUtil;
+import kr.or.ddit.utils.CookieUtil.TextType;
 
 @WebServlet("/image.do")
 public class ImageProviderServlet extends HttpServlet {
@@ -51,7 +56,6 @@ public class ImageProviderServlet extends HttpServlet {
 	
 	@Override
 	protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		resp.setContentType("image/jpg");
 
 		// 파라미터 받아오기
 		String img = req.getParameter("selImg");
@@ -71,6 +75,16 @@ public class ImageProviderServlet extends HttpServlet {
 			resp.sendError(HttpServletResponse.SC_NOT_FOUND,"이미지가 없습니다.");
 			return;
 		}
+		
+		//이미지가 존재하면 img를 쿠키에 저장
+//		Cookie imgCookie = new Cookie("img", URLEncoder.encode(img,"UTF-8"));
+//		imgCookie.setMaxAge(60*60*24*3);//3일을 살려놓는다.
+//		imgCookie.setPath(req.getContextPath());//이미지를 생성할때와 출력할때가 다르니까 패스 설정
+		//클라이언트는 1차적으로 서블릿으로 갔다가 jsp로 가니까 
+		
+		Cookie imgCookie  =CookieUtil.createCookie("imgCookie", img, req.getContextPath(), TextType.PATH, 60*60*24*7);
+		resp.addCookie(imgCookie);
+		
 		
 		// 받아온 파라미터 검증
 		//드라이브의 파일 이름과 일치하는지 확인

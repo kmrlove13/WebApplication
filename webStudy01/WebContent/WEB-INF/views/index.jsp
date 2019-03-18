@@ -39,7 +39,7 @@
 	}
 </style>
 <!-- Custom styles for this template -->
-	<link href="<%=request.getContextPath()%>>/css/dashboard.css"rel="stylesheet">
+	<link href="<%=request.getContextPath()%>/css/dashboard.css"rel="stylesheet">
 	<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery-3.3.1.min.js"></script>
 
 </head>
@@ -91,7 +91,7 @@
 				<% 
 			} else {//leftMenu의 화면이 보여져야함
 				pageContext.include(includePage);
-				}
+			}
 			%>
 
 			</main>

@@ -31,6 +31,9 @@
   <!--2분이 만료단위, 여기는 분단위로 설정-->
   	<session-config>
   		<session-timeout>2</session-timeout>
+<!--   		<cookie-config> -->
+<!--   			<name>mysession</name> -->
+<!--   		</cookie-config> -->
   	</session-config>
   <!--에러페이지 전역 처리방밥-->
   	<error-page>

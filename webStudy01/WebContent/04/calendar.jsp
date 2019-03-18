@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+<%@page import="java.net.URLEncoder"%>
+<%@page import="java.net.URLDecoder"%>
+<%@page import="com.fasterxml.jackson.databind.ObjectMapper"%>
+<%@page import="java.util.HashMap"%>
+<%@page import="java.util.Map"%>
 <%@page import="java.util.Locale"%>
 <%@page import="java.text.DateFormatSymbols"%>
 <%@page import="org.apache.commons.lang.StringUtils"%>
@@ -89,7 +94,22 @@
 		String yearStr = request.getParameter("year");		
 		String monthStr = request.getParameter("month");
 		//이 파라미터에 맞는 로케일을 만들어줘야함 
-		String language= request.getParameter("language");			
+		String language= request.getParameter("language");	
+		
+		//마샬링 언마샬링 공통 사용.
+		Map calendarMap=null; 
+		ObjectMapper mapper = new ObjectMapper();
+		Cookie[] cookies = request.getCookies();
+		if(cookies!=null){
+			for(Cookie tmp: cookies){
+				if(tmp.getName().equals("calendarCookie")){
+					String jsonString = URLDecoder.decode(tmp.getValue(),"UTF-8");
+					//언마샬링하고나면 객체가 생성되 
+					calendarMap= mapper.readValue(jsonString, HashMap.class);
+				}
+			}
+		}
+		
 		
 		
 		//클라이언트 지역의 언어가 accept-Language로 넘어옴
@@ -100,14 +120,21 @@
 		
 		if(StringUtils.isNotBlank(language)){
 			clientLocale = Locale.forLanguageTag(language);
+		}else if(calendarMap!=null){
+			clientLocale = Locale.forLanguageTag((String)calendarMap.get("language"));
 		}
-		
+		//우선순위 파라미터, 쿠키, 기본값
 		DateFormatSymbols dfs = new DateFormatSymbols(clientLocale);
 		
 		if(StringUtils.isNumeric(yearStr) && StringUtils.isNumeric(monthStr)){
 			cal.set(YEAR, Integer.parseInt(yearStr));
 			cal.set(MONTH, Integer.parseInt(monthStr));
+		}else if(calendarMap!=null){
+			cal.set(YEAR, Integer.parseInt((String)calendarMap.get("year")));
+			cal.set(MONTH, Integer.parseInt((String)calendarMap.get("month")));
 		}
+	
+	
 		//현재 년도와 열을 그대로 가지고 있는경우, 매개변수값을 가지고 있다던가 
 		int year = cal.get(YEAR);
 		int month = cal.get(MONTH);
@@ -136,7 +163,6 @@
 			displayMonth[idx] = (idx+1)+"월";
 			
 		}
-		
 %>	
 	
 	<form name ="calForm">	
@@ -246,3 +272,35 @@
 
 </body>
 </html>
+
+<%
+	//쿠키에 년, 월, 일을 설정
+	//이 3가지를 따로따로 등록하지 말고 한꺼번에 등록하기
+	/* Cookie yearCookie = new Cookie("yearCookie",year+"");
+	yearCookie.setMaxAge(60*60*24*2);
+	yearCookie.setPath(request.getContextPath());
+	
+	Cookie monthCookie = new Cookie("monthookie",month+"");
+	yearCookie.setMaxAge(60*60*24*2);
+	yearCookie.setPath(request.getContextPath());
+	
+	response.addCookie(yearCookie);
+	response.addCookie(monthCookie);
+	response.addCookie(monthCookie);
+ */
+ 	Map<String, Object> cookieMap = new HashMap<>();
+ 	cookieMap.put("year",year);
+ 	cookieMap.put("month",month);
+ 	cookieMap.put("language",clientLocale.toLanguageTag());
+ 
+ 	//마샬링
+ 	
+ 	//마샬링을 한 이후에 저장할 방식,마샬링의 원본 객체 
+ 	String jsonString=mapper.writeValueAsString(cookieMap);
+ 	Cookie calendarCookie  =new Cookie("calendarCookie",URLEncoder.encode(jsonString));
+ 	calendarCookie.setMaxAge(60*60*24*2);
+ 	calendarCookie.setPath(request.getContextPath());
+
+ 	response.addCookie(calendarCookie);
+ 
+%>
